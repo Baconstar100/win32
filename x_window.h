@@ -87,11 +87,11 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         case WM_COMMAND: {
             switch (LOWORD(wParam)) {
                 case BOOST_ADD:
-                    PaintRect(hWnd, psHdc, &ps, VK_OEM_PLUS, 5);
+                    PaintRect(hWnd, psHdc, &ps, VK_OEM_PLUS, 10);
                     RedrawWindow(hWnd, NULL, NULL, RDW_UPDATENOW | RDW_INVALIDATE);
                     break;
                 case BOOST_SUBTRACT:
-                    PaintRect(hWnd, psHdc, &ps, VK_OEM_MINUS, 5);
+                    PaintRect(hWnd, psHdc, &ps, VK_OEM_MINUS, 10);
                     RedrawWindow(hWnd, NULL, NULL, RDW_UPDATENOW | RDW_INVALIDATE);
                     break;
                 default:
