@@ -54,55 +54,46 @@ void StartWindow(MainWindow* paraWindow, HINSTANCE paraInst, int nCmdShow) {
 
     ShowWindow(paraWindow->xHwnd, nCmdShow);
 
-    MSG msg = {};
-    while ((bRet = GetMessage(&msg, NULL, 0, 0)) != 0) {//.message != WM_QUIT) {
-        if (bRet == -1) {
-            
-        } else {
+    MSG msg;
+    while ((bRet = GetMessage(&msg, NULL, 0, 0)) != 0) {
+        if (bRet != -1) {
             if (!TranslateAcceleratorW(paraWindow->xHwnd, haccel, &msg)) {
                 TranslateMessage(&msg);
                 DispatchMessage(&msg);
             }
+        } else {
+
         }
-        /*
-        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-         */
     }
 }
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     PAINTSTRUCT ps;
-    HDC psHdc;
-
-    /*
-    if (wParam != 0) {
-        printf("w: %d\nl: %d\n\n", wParam, lParam);
-    }
-    */
+    HDC psHdc = GetDC(hWnd);
     
     switch (msg) {
         case WM_CREATE: {
-            LPCREATESTRUCT xCreateStruct = (LPCREATESTRUCT) lParam;
-            SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)xCreateStruct->lpCreateParams);
-            PaintRect(hWnd, psHdc, &ps, wParam);
+            //LPCREATESTRUCT xCreateStruct = (LPCREATESTRUCT) lParam;
+            //SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)xCreateStruct->lpCreateParams);
+            CreateWindowW(L"STATIC", L"Text here", WS_VISIBLE | WS_CHILD | WS_BORDER, 20, 20, 300, 25, hWnd, NULL, NULL, NULL);
+            PaintRect(hWnd, psHdc, &ps, wParam, 1);
             return 0;
         }
         case WM_KEYDOWN: {
-            PaintRect(hWnd, psHdc, &ps, wParam);
+            PaintRect(hWnd, psHdc, &ps, wParam, 1);
             RedrawWindow(hWnd, NULL, NULL, RDW_UPDATENOW | RDW_INVALIDATE);
             return 0;
         }
         case WM_COMMAND: {
             switch (LOWORD(wParam)) {
                 case BOOST_ADD:
-                    PaintRect(hWnd, psHdc, &ps, 189);
+                    PaintRect(hWnd, psHdc, &ps, VK_OEM_PLUS, 5);
                     RedrawWindow(hWnd, NULL, NULL, RDW_UPDATENOW | RDW_INVALIDATE);
+                    break;
                 case BOOST_SUBTRACT:
-                    PaintRect(hWnd, psHdc, &ps, 187);
+                    PaintRect(hWnd, psHdc, &ps, VK_OEM_MINUS, 5);
                     RedrawWindow(hWnd, NULL, NULL, RDW_UPDATENOW | RDW_INVALIDATE);
+                    break;
                 default:
                     break;
             }
