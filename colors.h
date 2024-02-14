@@ -3,7 +3,7 @@
 
 void PrintRGB(COLORREF x);
 BOOL CheckLimit(int currAmt, int changeAmt, int limit);
-void PaintRect(HWND xHwnd, HDC xHdc, PAINTSTRUCT* xPs, int wParam);
+void PaintRect(HWND xHwnd, HDC xHdc, PAINTSTRUCT* xPs, int wParam, int amt);
 COLORREF LetterColor(int charDec);
 
 
@@ -19,7 +19,7 @@ BOOL CheckLimit(int currAmt, int changeAmt, int limit) {
     }
 }
 
-void PaintRect(HWND xHwnd, HDC xHdc, PAINTSTRUCT* xPs, int wParam) {
+void PaintRect(HWND xHwnd, HDC xHdc, PAINTSTRUCT* xPs, int wParam, int amt) {
     xHdc = BeginPaint(xHwnd, xPs);
     
     static COLORREF currColor = RGB(255, 255, 255);
@@ -28,36 +28,25 @@ void PaintRect(HWND xHwnd, HDC xHdc, PAINTSTRUCT* xPs, int wParam) {
     int currGreenVal = GetGValue(currColor);
     int currBlueVal = GetBValue(currColor);
     
-    switch (wParam) {
-        case 187:
-            if (CheckLimit(currRedVal, 1, 255)) {
-                MessageBoxA(xHwnd, "The color is already at the max", "Limit", 0);
-                break;
-            }
-            
-            currColor = RGB(++currRedVal, ++currGreenVal, ++currBlueVal);
-            FillRect(xHdc, &xPs->rcPaint, CreateSolidBrush(currColor));
-            break;
-            
-        case 189:
-            if (CheckLimit(currRedVal, -1, 0)) {
-                MessageBoxA(xHwnd, "The color is already at the min", "Limit", 0);
-                break;
-            }
-            
-            currColor = RGB(--currRedVal, --currGreenVal, --currBlueVal);
-            FillRect(xHdc, &xPs->rcPaint, CreateSolidBrush(currColor));
-            break;
-            
-        default:
-            if ('A' <= wParam && wParam <= 'Z') {
-                currColor = LetterColor(wParam);
-                FillRect(xHdc, &xPs->rcPaint, CreateSolidBrush(currColor));
-            }
-            
-            break;
+
+    if (wParam == VK_OEM_PLUS) {
+        if (CheckLimit(currRedVal, amt, 255)) {
+            MessageBoxW(xHwnd, L"The color is already at the max", L"Limit", 0);
+        } else {
+            currColor = RGB((currRedVal += amt), (currGreenVal += amt), (currBlueVal += amt));
         }
-        
+    } else if (wParam == VK_OEM_MINUS) {
+        if (CheckLimit(currRedVal, -amt, 0)) {
+            MessageBoxW(xHwnd, L"The color is already at the min", L"Limit", 0);
+        } else {
+            currColor = RGB((currRedVal -= amt), (currGreenVal -= amt), (currBlueVal -= amt));
+        }
+    } else if ('A' <= wParam && wParam <= 'Z') {
+        int x = LetterColor(wParam);
+        currColor = RGB((currRedVal = x), (currGreenVal = x), (currBlueVal = x));
+    }
+
+    FillRect(xHdc, &xPs->rcPaint, CreateSolidBrush(currColor));
     EndPaint(xHwnd, xPs);
 }
 
