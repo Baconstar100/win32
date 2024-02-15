@@ -1,4 +1,4 @@
-#include "x_window.h"
+#include "src/x_window.h"
 
 int CALLBACK WinMain(HINSTANCE hInst, HINSTANCE xHinst, LPSTR lpstr, int cmdShow) {
     MainWindow mainWindow;
