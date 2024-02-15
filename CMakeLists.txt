@@ -1,13 +1,12 @@
-cmake_minimum_required(VERSION 3.26)
+cmake_minimum_required(VERSION 3.6.2)
 project(testing C)
 
 set(CMAKE_C_STANDARD 11)
 
+add_executable(testing WIN32 main.c
+        src/x_window.h
+        src/colors.h
+        src/standard.h
+        src/resource.h)
 
-
-add_executable(testing WIN32 VS_STARTUP_PROJECT main.c
-        x_window.h
-        colors.h
-        standard.h
-        resource.h
-        colors.rc)
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT testing)
