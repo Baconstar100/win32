@@ -1,0 +1,7 @@
+#include "../src/resource.h"
+
+IDR_ACCEL1 ACCELERATORS
+{
+    0xBD,   BOOST_ADD, NOINVERT, CONTROL, VIRTKEY
+    0xBB,   BOOST_SUBTRACT, CONTROL, VIRTKEY
+}
